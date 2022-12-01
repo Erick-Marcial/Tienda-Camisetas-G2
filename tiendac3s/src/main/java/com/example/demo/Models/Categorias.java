@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author INFINITY
+ * @author oscar
  */
 @Entity
 @Table(name = "categorias")

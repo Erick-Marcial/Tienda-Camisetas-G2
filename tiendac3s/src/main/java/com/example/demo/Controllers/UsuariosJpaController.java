@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.example.demo.Controllers;
 
 import com.example.demo.Controllers.exceptions.NonexistentEntityException;
@@ -14,14 +11,14 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- *
- * @author INFINITY
- */
+@CrossOrigin(origins="/*")
 @RestController
 @RequestMapping("/usuarios")
 public class UsuariosJpaController implements Serializable {
@@ -35,13 +32,36 @@ public class UsuariosJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Usuarios usuarios) {
+    @PostMapping("/login")
+    public String login(@RequestBody Usuarios usuario){
+            System.out.println("Correo: "+usuario.getCorreo()+" - "+ usuario.getContrasena());
+            EntityManager em = getEntityManager();
+            try{
+                String query ="SELECT * FROM usuarios WHERE correo = '"+usuario.getCorreo()+"' AND contrasena = '"+usuario.getContrasena()+"'";
+                System.out.println(""+query);
+                Query q =em.createNativeQuery(query);
+                List<Usuarios> lu = q.getResultList();
+                if (lu.isEmpty()){
+                    return "no se encuentra el usuario";
+                }else{
+                    return "ok";
+                }
+            }catch(Exception ex){
+                System.out.println(""+ex);
+                return "Error Exception";
+            }
+        
+    }
+    
+    @PostMapping()
+    public String create(@RequestBody Usuarios usuarios) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             em.persist(usuarios);
             em.getTransaction().commit();
+            return "ok";
         } finally {
             if (em != null) {
                 em.close();

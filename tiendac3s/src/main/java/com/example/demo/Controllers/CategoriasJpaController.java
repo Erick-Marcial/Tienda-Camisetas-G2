@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.example.demo.Controllers;
 
 import com.example.demo.Controllers.exceptions.NonexistentEntityException;
@@ -14,14 +11,14 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- *
- * @author INFINITY
- */
+@CrossOrigin(origins="/*")
 @RestController
 @RequestMapping("/categorias")
 public class CategoriasJpaController implements Serializable {
@@ -35,13 +32,15 @@ public class CategoriasJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Categorias categorias) {
+    @PostMapping()
+    public String create(@RequestBody Categorias categorias) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             em.persist(categorias);
             em.getTransaction().commit();
+            return "ok";
         } finally {
             if (em != null) {
                 em.close();
