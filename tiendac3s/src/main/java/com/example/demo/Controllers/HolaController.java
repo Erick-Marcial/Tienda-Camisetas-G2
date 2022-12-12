@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HolaController {
-    @GetMapping("/")
+    @GetMapping("/hola")
     public String hola(){
         return "caso prueba 2 **----hola nivelacion ciclo 3!!!";
     }
